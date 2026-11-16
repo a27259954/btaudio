@@ -111,7 +111,8 @@ type Manager struct {
 	store Store
 	t     Timing
 
-	// OnChange is called (without locks held) after any state change.
+	// OnChange is called (without locks held) after any state change. Set it
+	// before Run or any other method.
 	OnChange func()
 
 	mu      sync.Mutex

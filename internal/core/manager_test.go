@@ -128,17 +128,22 @@ func TestManualConnectRetries(t *testing.T) {
 
 func TestRepairReopensWithoutGoingIdle(t *testing.T) {
 	m, be, _ := setup(t)
+	// Install the hook before any goroutine can call it (as the app does).
+	var mu sync.Mutex
+	var seen []Status
+	var recording atomic.Bool
+	m.OnChange = func() {
+		if recording.Load() {
+			mu.Lock()
+			seen = append(seen, status(m))
+			mu.Unlock()
+		}
+	}
 	m.Connect("p1")
 	waitFor(t, m, Connected)
 	first := be.lastConn()
 
-	var mu sync.Mutex
-	var seen []Status
-	m.OnChange = func() {
-		mu.Lock()
-		seen = append(seen, status(m))
-		mu.Unlock()
-	}
+	recording.Store(true)
 	be.setFail(2) // the phone needs a moment after the old connection closes
 	before := be.openCount()
 	m.Repair()
