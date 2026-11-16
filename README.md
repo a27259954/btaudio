@@ -54,7 +54,7 @@ BtAudio is a single `btaudio.exe` that sits in the tray. Your phone streams musi
 ## Quick start
 
 1. **Pair the phone** in *Settings → Bluetooth & devices → Add device*. You only need to do this once.
-2. **Download** [`btaudio.exe`](https://github.com/a27259954/btaudio/releases/latest/download/btaudio.exe) and run it.
+2. **Download** `btaudio-vX.Y.Z.exe` from the [latest release](https://github.com/a27259954/btaudio/releases/latest) and run it.
 3. Click **Connect** next to your phone. Play something, and it comes out of the PC.
 
 Connecting turns on **Auto** for that phone, so BtAudio reconnects it whenever it comes back in range. **Disconnect** turns Auto off. Closing the window hides BtAudio to the tray. Right-click the tray icon to connect, repair or quit.
@@ -115,13 +115,13 @@ Make sure the phone is nearby and Bluetooth is on. If it keeps failing, open the
 <details>
 <summary><b>Windows SmartScreen warns about the exe.</b></summary>
 
-Release builds are not code-signed. Check the file against the `btaudio.exe.sha256` published with each release, then choose *More info → Run anyway*.
+Release builds are not code-signed. Check the file against the `.sha256` file published next to it, then choose *More info → Run anyway*.
 </details>
 
 <details>
 <summary><b>How do I uninstall it?</b></summary>
 
-Turn off **Start with Windows**, quit from the tray, then delete `btaudio.exe` and `%APPDATA%\BtAudio`.
+Turn off **Start with Windows**, quit from the tray, then delete the exe and `%APPDATA%\BtAudio`.
 </details>
 
 ## Building from source
@@ -152,7 +152,7 @@ Every push to `main` publishes a release automatically. See [docs/CONTRIBUTING.m
 
 ## Contributing
 
-Issues and PRs are welcome. Please read [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) first: the project deliberately stays small.
+Issues and PRs are welcome. Please read [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) first: the project deliberately stays small. Report security problems privately as described in [docs/SECURITY.md](docs/SECURITY.md).
 
 ## License
 

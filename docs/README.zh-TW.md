@@ -34,7 +34,7 @@ BtAudio 是單一執行檔 `btaudio.exe`，平常待在系統匣。手機透過�
 ## 快速開始
 
 1. **配對手機**：到「設定 → 藍牙與裝置 → 新增裝置」配對，只需要做一次。
-2. **下載** [`btaudio.exe`](https://github.com/a27259954/btaudio/releases/latest/download/btaudio.exe) 並執行。
+2. 從[最新版本](https://github.com/a27259954/btaudio/releases/latest)**下載** `btaudio-vX.Y.Z.exe` 並執行。
 3. 按手機旁的「**連線**」，接著播放任何聲音，就會從電腦播出來。
 
 按「連線」會同時開啟那支手機的「**自動**」連線，之後手機回到附近時就會自動連上；按「中斷」會關閉自動連線。關閉視窗時 BtAudio 會縮到系統匣，在系統匣圖示上按右鍵可以連線、修復或結束。
@@ -95,13 +95,13 @@ flowchart LR
 <details>
 <summary><b>Windows SmartScreen 跳出警告</b></summary>
 
-發佈的執行檔沒有程式碼簽章。請用每個版本附上的 `btaudio.exe.sha256` 核對檔案，再選「其他資訊 → 仍要執行」。
+發佈的執行檔沒有程式碼簽章。請用同一個版本附上的 `.sha256` 檔核對檔案，再選「其他資訊 → 仍要執行」。
 </details>
 
 <details>
 <summary><b>怎麼移除？</b></summary>
 
-先關閉「開機啟動」，從系統匣結束程式，再刪除 `btaudio.exe` 和 `%APPDATA%\BtAudio` 資料夾即可。
+先關閉「開機啟動」，從系統匣結束程式，再刪除執行檔和 `%APPDATA%\BtAudio` 資料夾即可。
 </details>
 
 ## 從原始碼建置
@@ -129,6 +129,10 @@ wails3 task check
 ```
 
 每次推送到 `main` 都會自動發佈新版本，詳見 [CONTRIBUTING.md](CONTRIBUTING.md#releases)。
+
+## 參與貢獻
+
+歡迎提出 Issue 和 PR，請先閱讀 [CONTRIBUTING.md](CONTRIBUTING.md)。安全性問題請依 [SECURITY.md](SECURITY.md) 私下回報，不要開公開 Issue。
 
 ## 授權
 
