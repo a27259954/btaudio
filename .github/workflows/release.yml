@@ -1,0 +1,123 @@
+# Every push to main that changes code publishes a GitHub release.
+#
+# Version: <VERSION file>.<n>, where n is one more than the highest existing
+# v<VERSION>.* tag (e.g. VERSION=0.1 → v0.1.0, v0.1.1, …). Bump VERSION for
+# a new minor/major line. Put [skip release] in the commit message to skip.
+name: release
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "LICENSE"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/dependabot.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: ${{ !contains(github.event.head_commit.message, '[skip release]') }}
+    runs-on: windows-latest
+    permissions:
+      contents: write # create the tag and the release
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # tags are needed to compute the next version
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Compute version
+        id: version
+        shell: pwsh
+        run: |
+          $base = (Get-Content VERSION -Raw).Trim()
+          if ($base -notmatch '^\d+\.\d+$') { throw "VERSION must look like 0.1, got '$base'" }
+          $max = -1
+          foreach ($t in git tag --list "v$base.*") {
+            if ($t -match "^v$([regex]::Escape($base))\.(\d+)$") { $max = [Math]::Max($max, [int]$Matches[1]) }
+          }
+          $v = "$base.$($max + 1)"
+          "version=$v" >> $env:GITHUB_OUTPUT
+          "Releasing v$v" >> $env:GITHUB_STEP_SUMMARY
+
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v3/cmd/wails3@v3.0.0-beta.28
+
+      - name: Frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run check
+          npm run build
+
+      - name: Go vet and test
+        env:
+          CGO_ENABLED: "1" # race detector; the runner image ships MinGW gcc
+        run: |
+          go vet ./...
+          go vet -tags demo .
+          go test -race ./internal/...
+
+      - name: Stamp version into exe metadata
+        shell: pwsh
+        run: |
+          $v = "${{ steps.version.outputs.version }}"
+          $p = "build/windows/info.json"
+          $j = Get-Content $p -Raw | ConvertFrom-Json
+          $j.fixed.file_version = $v
+          $j.info.'0000'.ProductVersion = $v
+          $j | ConvertTo-Json -Depth 5 | Set-Content $p -Encoding utf8
+
+      - name: Build btaudio.exe
+        run: wails3 task build "EXTRA_LDFLAGS=-X main.version=v${{ steps.version.outputs.version }}"
+
+      - name: Checksum
+        shell: pwsh
+        run: |
+          $h = (Get-FileHash bin/btaudio.exe -Algorithm SHA256).Hash.ToLower()
+          "$h  btaudio.exe" | Out-File -Encoding ascii bin/btaudio.exe.sha256
+          "SHA-256: ``$h``" >> $env:GITHUB_STEP_SUMMARY
+
+      # gh (preinstalled on runners) instead of a third-party action: one less
+      # dependency with write access. The release-notes API occasionally
+      # returns 5xx, so the last attempts fall back to a plain note.
+      - name: Publish release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v${{ steps.version.outputs.version }}
+        run: |
+          $files = @('bin/btaudio.exe', 'bin/btaudio.exe.sha256')
+          $fallback = "Automated build of $env:GITHUB_SHA.`n`nDownload ``btaudio.exe`` and verify it with ``btaudio.exe.sha256``."
+          for ($i = 1; $i -le 4; $i++) {
+            gh release view $env:TAG *> $null
+            if ($LASTEXITCODE -eq 0) {
+              gh release upload $env:TAG @files --clobber
+            } elseif ($i -lt 3) {
+              gh release create $env:TAG @files --title "BtAudio $env:TAG" --target $env:GITHUB_SHA --latest --generate-notes
+            } else {
+              gh release create $env:TAG @files --title "BtAudio $env:TAG" --target $env:GITHUB_SHA --latest --notes $fallback
+            }
+            if ($LASTEXITCODE -eq 0) { "Published $env:TAG" >> $env:GITHUB_STEP_SUMMARY; exit 0 }
+            Write-Warning "attempt $i failed, retrying in $(10 * $i)s"
+            Start-Sleep -Seconds (10 * $i)
+          }
+          throw "could not publish $env:TAG"

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/png" href="/icon.png"/>
+  <title>BtAudio</title>
+</head>
+<body>
+  <header class="titlebar">
+    <img src="/icon.png" class="titlebar-icon" alt=""/>
+    <span class="titlebar-name">BtAudio</span>
+    <span class="titlebar-ver" id="version"></span>
+    <div class="titlebar-actions">
+      <button class="tb-btn" id="btn-min" data-i18n-title="minimize">
+        <svg viewBox="0 0 12 12"><path d="M2 6h8"/></svg>
+      </button>
+      <button class="tb-btn tb-close" id="btn-close" data-i18n-title="close">
+        <svg viewBox="0 0 12 12"><path d="M3 3l6 6M9 3l-6 6"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="content">
+    <section class="hero" id="hero" data-status="idle">
+      <div class="orb">
+        <span class="orb-ring"></span>
+        <svg class="orb-glyph" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 15v-3a8 8 0 0 1 16 0v3"/>
+          <rect x="3" y="14" width="4.5" height="6.5" rx="1.8"/>
+          <rect x="16.5" y="14" width="4.5" height="6.5" rx="1.8"/>
+        </svg>
+      </div>
+      <div class="hero-text">
+        <h1 class="hero-title" id="hero-title"></h1>
+        <div class="output" data-i18n-title="output">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>
+          <span id="output">—</span>
+          <span class="meter"><i id="meter-fill"></i></span>
+        </div>
+      </div>
+      <button class="fix" id="btn-fix" data-i18n-title="repairTip">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+        <span data-i18n="repair"></span>
+      </button>
+    </section>
+
+    <div id="bt-error" class="banner" hidden></div>
+    <div id="devices" class="devices"></div>
+
+    <div class="card settings">
+      <label class="row"><span data-i18n="startup"></span><input type="checkbox" class="switch" id="opt-autostart"/></label>
+      <label class="row lang">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+        <select id="opt-lang"></select>
+      </label>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

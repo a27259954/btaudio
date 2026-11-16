@@ -1,0 +1,58 @@
+# ─── Build output ────────────────────────────────────────────────────────────
+bin/
+dist/
+frontend/dist/
+*.exe
+*.syso
+*.msix
+*.appx
+build/.icon.icns
+build/windows/nsis/MicrosoftEdgeWebview2Setup.exe
+.task/
+
+# ─── Dependencies ────────────────────────────────────────────────────────────
+node_modules/
+vendor/
+
+# ─── Go / test artifacts ─────────────────────────────────────────────────────
+*.test
+*.out
+*.prof
+coverage.*
+
+# ─── Secrets & local data (never commit) ─────────────────────────────────────
+.env
+.env.*
+*.pem
+*.key
+*.pfx
+*.p12
+config.json
+
+# ─── AI assistant instructions & local agent state ──────────────────────────
+AGENT.md
+AGENTS.md
+CLAUDE.md
+CLAUDE.local.md
+GEMINI.md
+.claude/
+.cursor/
+.cursorrules
+.windsurfrules
+.clinerules
+.codex/
+.gemini/
+.mcp.json
+
+# ─── Logs ────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+
+# ─── OS / editors ────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+*~
