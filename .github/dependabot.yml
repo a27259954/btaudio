@@ -1,11 +1,17 @@
 version: 2
 updates:
+  # Wails (Go module, @wailsio/runtime and the CLI pinned in the workflows)
+  # must move together, so it is upgraded by hand.
   - package-ecosystem: gomod
     directory: /
     schedule: { interval: monthly }
+    ignore:
+      - dependency-name: github.com/wailsapp/wails/v3
   - package-ecosystem: npm
     directory: /frontend
     schedule: { interval: monthly }
+    ignore:
+      - dependency-name: "@wailsio/runtime"
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: monthly }

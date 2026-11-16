@@ -1,10 +1,10 @@
-# Checks for pull requests and non-main branches (main is checked by release.yml).
+# Checks for pull requests and main (the README badge shows main).
 name: ci
 
 on:
   pull_request:
   push:
-    branches-ignore: [main]
+    branches: [main]
 
 permissions:
   contents: read

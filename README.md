@@ -6,7 +6,7 @@
 
 **Use your Windows PC as a Bluetooth speaker for your phone. Keep your headphones on at your desk and still hear your phone.**
 
-[![CI](https://github.com/a27259954/btaudio/actions/workflows/ci.yml/badge.svg)](https://github.com/a27259954/btaudio/actions/workflows/ci.yml)
+[![CI](https://github.com/a27259954/btaudio/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/a27259954/btaudio/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/a27259954/btaudio?sort=semver)](https://github.com/a27259954/btaudio/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/a27259954/btaudio/total?color=blue)](https://github.com/a27259954/btaudio/releases)
 [![Go](https://img.shields.io/github/go-mod/go-version/a27259954/btaudio)](go.mod)
